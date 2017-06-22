@@ -187,13 +187,13 @@ We can model this stage like this:
 
 Each of the `a` values in this diagram are the `Instruction` values. The `x` values are the `state` and the `b` values are the `Int?` emitted.
 
-This is called a **reducer**. A reducer is an entity with identity (a reference type in Swift) and internal state. A reducer is accessed purely by incoming and outgoing messages. I used a capturing closure to ad hoc a reducer from a `flatMap` function and an `Int` variable but most reducers are `class` instances that maintain their state a little more tightly and assist with integration into a larger graph.
+This is called a **reducer** and it is the third tier of computational unit that I want to discuss. A reducer is an entity with identity (a reference type in Swift) and internal state that is accessed purely by incoming and outgoing messages.
 
-This is really a description of the reducer *and* its contents.
-
-When I say that reducers are the third tier of computation unit that I want to discuss, I'm excluding consideration of the contents of the reducer (which are typical Swift statements effecting the encapsulated state) and instead considering the reducer as a black box and suggesting that these boxes be used to layout higher level logic.
+When I say that reducers are the third tier of computation unit that I want to discuss, I'm excluding consideration of the contents of the reducer (which are typical Swift statements effecting the encapsulated state) and instead considering the reducer as a single black box unit defined by its connections to other units and suggesting that these boxes are how we can lay out higher level logic.
 
 Another way of explaining this is while statements perform logic *within* an execution context, reducers form logic by spanning between execution contexts.
+
+I used a capturing closure to ad hoc a reducer from a `flatMap` function and an `Int` variable but most reducers are `class` instances that maintain their state a little more tightly and assist with integration into a larger graph.
 
 > The term "reducer" to describe this type of construct comes via [reduction semantics](https://en.wikipedia.org/wiki/Operational_semantics#Reduction_semantics) in programming language semantics. In a weird terminology twist, "reducers" are also called "accumulators", despite those words being near opposites. It's a matter of perspective: a "reducer" reduces the incoming stream of messages down to a single state value; while an "accumulator" accumulates new information in its state over time by incorporating each incoming message as it arrives.
 
@@ -255,7 +255,7 @@ It's a situation where *limiting* the functionality of an interface will greatly
 
 ### Looking forward...
 
-In the example in the [Structuring logic through component connections](#structuring-logic-through-component-connections) section, I used the controversial definition of `flatMap` (the one that isn't a monad). In my next article, I'm going to talk about why monads are considered a fundamental unit of computation to many functional programmers yet a strict implementation in imperative programming is less useful than transforms which aren't quite monads.
+In the example in the [Structuring logic through component connections](#structuring-logic-through-component-connections) section, I used the controversial definition of `flatMap` (the one that isn't a monad). In my next article, I'm going to talk about why monads are considered a fundamental unit of computation to many functional programmers yet a strict implementation in imperative programming is sometimes less useful than transforms which aren't quite monads.
 
 ## Code license
 
