@@ -6,7 +6,7 @@ Copyright © 2017 Matt Gallagher. All rights reserved. Code samples may be used 
 
 # Statements, messages and reducers
 
-Common advice when improving the design of a program is to break the behavior into small isolated units of functionality so that we can consider the behavior within each component separately to the connections between components.
+Common advice when improving the design of a program is to break the programs into small isolated units of functionality so that we can consider the behavior within each component separately to the connections between components.
 
 If that's the only advice you're given though, it can be difficult to work out how to apply it in practice.
 
@@ -201,7 +201,7 @@ Another way of explaining this is while statements perform logic *within* an exe
 
 We can replace the reducer abstractions with very different kinds of machinery.
 
-We could migrate our previous code, which operates on a Swift `Array` of values to the CwlSignal reactive programming framework with effort that is barely more than drag and drop. This would let us handle the same logic asynchronously, over time and threadsafe.
+We could migrate our previous code, which operates on a Swift `Array` of values to the CwlSignal reactive programming framework with effort that is barely more than drag and drop. This would give us access to asynchronous capabilities or true communication channels between different parts of our program.
 
 Here's how it looks:
 
@@ -229,25 +229,33 @@ Signal<Instruction>.from(values: [
 
 The `filterMap` function here is more ideally suited as a reducer since it offers truly private internal state as part of the API – no more captured variables required to establish private state - otherwise it is semantically equivalent to the previous `flatMap` as it maps over the sequences of values in the signal and filters out optionals.
 
-This ease of changing between abstractions work because the contents of the reducer are dependent on the messages, not the reducer machinery itself.
+This simple change between abstractions is possible because the contents of the reducer are dependent on the messages, not the reducer machinery itself.
 
 As for any additional tiers of computational unit beyond reducers? I don't know, I haven't encountered any. We've addressed the issue of state encapsulation so any additional tier would be to address a new issue. But if artificial neural networks can have "Deep Learning", then why can't programming have "Deep Semantics"? Clearly, it's the future 😉.
 
 ## Conclusion
 
+The lesson here is that the most natural way to break a program into small, isolated components is to organize your program in three different tiers:
+
+1. stateful code isolated in reducers with access limited to messages in and messages out
+2. messages which act to program reducers into a given state
+3. graph structure formed by reducers lays out the higher level logic of the program
+
 None of this is new advice; this all originates in concurrent computation theory from mid-1970s and the advice hasn't changed substantially since the early 1990s when "reduction semantics" were formalized.
 
-Of course, that doesn't mean that people always follow good advice. Object-oriented programming was the hammer that people used to try and solve every programming problem though the 1990s and early 2000s and while you can build a reducer from an object, that doesn't mean that all objects are reducers. Unrestricted interfaces on objects can make state, dependencies and interface coupling into a maintenance nightmare. However, it is straightforward to model your objects as reducers by simplifying the public interface down to a constructor plus messages-in and messages-out; it will greatly improve the ability to maintain and iterate the design.
+Of course, that doesn't mean that people always follow good advice. Object-oriented programming was the hammer that people used to try and solve every programming problem though the 1990s and early 2000s and while you can build a reducer from an object, that doesn't mean that all objects are reducers. Unrestricted interfaces on objects can make state, dependencies and interface coupling into a maintenance nightmare.
 
-The lesson here is that the most natural way to break a program into small, isolated components is to think about your program on three different tiers:
-	
-1. stateful code isolated in reducers with access limited to messages in and messages out
-2. reducers are programmed by messages 
-3. graph structure lays out the higher level logic of the program
+However, it is straightforward to model your objects as reducers by simplifying the public interface down to:
+
+* a constructor
+* a single function for messages-in
+* a way to subscribe or otherwise connect messages-out
+
+It's a situation where *limiting* the functionality of an interface will greatly improve the ability to maintain and iterate the design.
 
 ### Looking forward...
 
-In the example in the [Structuring logic through component connections](#structuring-logic-through-component-connections) section, I used the controversial definition of `flatMap` (the one that isn't a monad). In my next article, I'm going to talk about monads and why I think strict definitions of monads are fairly useless in imperative languages, despite being the fundamental computational unit to many functional programmers.
+In the example in the [Structuring logic through component connections](#structuring-logic-through-component-connections) section, I used the controversial definition of `flatMap` (the one that isn't a monad). In my next article, I'm going to talk about why monads are considered a fundamental unit of computation to many functional programmers yet a strict implementation in imperative programming is less useful than transforms which aren't quite monads.
 
 ## Code license
 
