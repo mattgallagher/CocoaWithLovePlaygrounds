@@ -23,7 +23,7 @@ The purpose of this article is to show how to isolate state in your program. The
 
 ## A series of statements
 
-A **statement** is the lowest tier of computational unit available in an imperative programming language, like Swift. Common statements in Swift include function calls, assignments and control flow statements.
+A **statement** is the standard computational unit in an imperative programming language, like Swift. Statements include assigment, functions and control flow and may include effects (changes in state).
 
 I know, I know, I'm explaining basic programming terminology to programmers; I'll be brief.
 
@@ -187,11 +187,13 @@ We can model this stage like this:
 
 Each of the `a` values in this diagram are the `Instruction` values. The `x` values are the `state` and the `b` values are the `Int?` emitted.
 
-This is called a **reducer** and it is the third and final tier of computational unit that I'll look at in this article.
+This is called a **reducer**. A reducer is an entity with identity (a reference type in Swift) and internal state. A reducer is accessed purely by incoming and outgoing messages. I used a capturing closure to ad hoc a reducer from a `flatMap` function and an `Int` variable but most reducers are `class` instances that maintain their state a little more tightly and assist with integration into a larger graph.
 
-A reducer is an entity with identity (a reference type in Swift) and internal state. A reducer is accessed purely by incoming and outgoing messages. I used a capturing closure to ad hoc a reducer from a `flatMap` function and an `Int` variable but most reducers are `class` instances that maintain their state a little more tightly and assist with integration into a larger graph.
+This is really a description of the reducer *and* its contents.
 
-It might be a little strange to think of a reducer as a unit of computation, since it is mostly an encapsulation around internal logic comprised of statements. The importance of reducers to program logic is that they form the higher level structure of a program – nodes in the overall graph of connectivity throughout your program. Another way of explaining this is while statements perform logic *within* an execution context, reducers form logic by spanning between execution contexts.
+When I say that reducers are the third tier of computation unit that I want to discuss, I'm excluding consideration of the contents of the reducer (which are typical Swift statements effecting the encapsulated state) and instead considering the reducer as a black box and suggesting that these boxes be used to layout higher level logic.
+
+Another way of explaining this is while statements perform logic *within* an execution context, reducers form logic by spanning between execution contexts.
 
 > The term "reducer" to describe this type of construct comes via [reduction semantics](https://en.wikipedia.org/wiki/Operational_semantics#Reduction_semantics) in programming language semantics. In a weird terminology twist, "reducers" are also called "accumulators", despite those words being near opposites. It's a matter of perspective: a "reducer" reduces the incoming stream of messages down to a single state value; while an "accumulator" accumulates new information in its state over time by incorporating each incoming message as it arrives.
 
