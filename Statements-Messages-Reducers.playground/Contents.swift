@@ -43,7 +43,7 @@ func printCode(_ code: Int) {
 let grinning = 0x1f600
 printCode(grinning)
 
-let rollingOnTheFloorLaughing = 0x1f600
+let rollingOnTheFloorLaughing = 0x1f923
 printCode(rollingOnTheFloorLaughing)
 
 let notAValidScalar = 0x999999
@@ -114,7 +114,7 @@ var interpreter = Interpreter()
 let instructions = Instruction.array(
 	.set(0x1f600), .print,
 	.increment(0x323), .print,
-	.increment(0x999999), .print,
+	.set(0x999999), .print,
 	.set(0x1f60f), .print,
 	.increment(0xe), .print
 )
@@ -153,7 +153,7 @@ var state: Int = 0
 Instruction.array(
 	.set(0x1f600), .print,
 	.increment(0x323), .print,
-	.increment(0x999999), .print,
+	.set(0x999999), .print,
 	.set(0x1f60f), .print,
 	.increment(0xe), .print
 ).flatMap { (i: Instruction) -> Int? in
@@ -209,7 +209,7 @@ Here's how it looks:
 Signal<Instruction>.from(values: [
 	.set(0x1f600), .print,
 	.increment(0x323), .print,
-	.increment(0x999999), .print,
+	.set(0x999999), .print,
 	.set(0x1f60f), .print,
 	.increment(0xe), .print
 ]).filterMap(initialState: 0) { (state: inout Int, i: Instruction) -> Int? in
