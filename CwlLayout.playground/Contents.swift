@@ -1,12 +1,12 @@
 /*:
 
-This article originally appeared on the [Cocoa with Love](https://www.cocoawithlove.com) website: [CwlLayout: a declarative wrapper around Auto Layout](https://www.cocoawithlove.com/blog/cwllayout.html).
+This article originally appeared on the [Cocoa with Love](https://www.cocoawithlove.com) website: [CwlLayout: a Swift wrapper around Auto Layout](https://www.cocoawithlove.com/blog/cwllayout.html).
 
 Copyright © 2017 Matt Gallagher. All rights reserved. Code samples may be used in accordance with the ISC-style license at the bottom of this page.
 
 ---
 
-# CwlLayout: a declarative wrapper around Auto Layout
+# CwlLayout: a Swift wrapper around Auto Layout
 
 Cocoa's Auto Layout is an effective constraints system but as an API for "layout", it leaves a lot to be desired. In most respects, Auto Layout is a constraints API upon which we can *build* a layout system but is not itself an API that offers layout.
 
@@ -131,7 +131,7 @@ So laying out in a line is simpler but it still requires a lot of carefully cont
 
 The problem is that no matter how you apply them, constraints are not layouts; constraints are building blocks from which we can *make* layouts but an actual layout requires starting a different way.
 
-For actualy layout, UIKit and AppKit provide `UIStackView`/`NSStackView`. Let's take a look:
+For actual layout, UIKit and AppKit provide `UIStackView`/`NSStackView`. Let's take a look:
 
 */
 func example3(view: UIView, left: UILabel, right: UILabel) {

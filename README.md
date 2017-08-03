@@ -3,7 +3,7 @@
 Swift Playground versions of select articles from Cocoa with Love.
 
 1. [Statements, messages, reducers](#statements-messages-reducers)
-2. [CwlLayout: a declarative wrapper around Auto Layout](#cwllayout-a-declarative-wrapper-around-auto-layout)
+2. [CwlLayout: a Swift wrapper around Auto Layout](#cwllayout-a-declarative-wrapper-around-auto-layout)
 
 ## Statements, messages, reducers
 
@@ -13,8 +13,8 @@ The playground should work in Xcode 8.3.3 and Xcode 9.
 
 Note that the playground may take about 10 seconds to start while it compiles the associated "Sources" for the project.
 
-## CwlLayout: a declarative wrapper around Auto Layout
+## CwlLayout: a Swift wrapper around Auto Layout
 
-This article originally appeared on the [Cocoa with Love](https://www.cocoawithlove.com) website: [CwlLayout: a declarative wrapper around Auto Layout](https://www.cocoawithlove.com/blog/cwllayout.html).
+This article originally appeared on the [Cocoa with Love](https://www.cocoawithlove.com) website: [CwlLayout: a Swift wrapper around Auto Layout](https://www.cocoawithlove.com/blog/cwllayout.html).
 
 The playground should work in Xcode 8.3.3 and Xcode 9.
