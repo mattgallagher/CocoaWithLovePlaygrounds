@@ -16,9 +16,9 @@ In this article, I'm going to look at why using Auto Layout directly can be frus
 
 ## Declarative programming
 
-Declarative programming is about describing a program as a set of rules. Syntactically, declarative programming is often about assembling a whole system of rules as a single expression whose structure reflects the relationship between the rules in the system.
+Declarative programming is about describing a program as a set of rules and relationships. Syntactically, declarative programming is often about assembling a whole system of rules as a single expression or domain-specific language whose structure reflects the relationship between the rules in the system.
 
-Layout is an inherently declarative task. Layout is a set of rules (which Auto Layout called "constraints") that apply to the contents of a view, ideally for the entire lifetime of the contents.
+Layout is an inherently declarative task. Layout is a set of rules (which Auto Layout calls "constraints") that apply to the contents of a view, ideally for the entire lifetime of the contents. Constraint programming itself is sometimes considered a subdiscipline of declarative programming.
 
 Unfortunately, despite Auto Layout modelling a declarative system, it doesn't offer a very declarative API. There are a handful of ways to use Auto Layout but none of them can be written as a single expression, most require a number of mutable property changes to configure views. In many cases, multiple constraints must be allocated and applied at separate times.
 
@@ -262,11 +262,13 @@ CwlLayout supports deployment targets of macOS 10.11, iOS 9 and later. I don't h
 
 ## Conclusion
 
-Using Auto Layout constraints directly is an exercise in frustration. They are inconsistent by default so inconsistency and ambiguity are continual problems. The fact that the code is often unaesthetic and uncomposeable is an extra frustration on top.
+Using Auto Layout constraints directly is an exercise in frustration. They are inconsistent by default so inconsistency and ambiguity are continual problems. The fact that the code is often unaesthetic and uncomposeable adds to the frustration.
 
 Apple's documentation and videos focus on using Auto Layout in Interface Builder, which avoids the aesthetics of the code but the fact remains that even in Interface Builder, you're still just applying the same independent constraints and it's still prone to being inconsistent if you're not precise and accurate.
 
-A far better solution for programming a declarative system is to use an API that itself is declarative – builds the whole system as a single composeable expression – and which, rather than constructing individual constraints separately, understands the whole system and constructs constraints as needed to ensure consistency-by-default. A `UIStackView` or `NSStackView` can offer this but they are relatively inflexible and still typically require multiple statements to configure – hardly the single expression declarative ideal.
+A far better solution for programming a declarative system is to use an API that itself is declarative and builds the whole system as a single composeable expression and rather than constructing individual constraints separately, understands the whole system and can automatically include constraints needed for consistency.
+
+A `UIStackView` or `NSStackView` gets part of the way towards this ideal. These classes offer understanding of the whole system and limit the amount of inconsistency but they are relatively inflexible and typically require multiple statements to configure.
 
 CwlLayout isn't complicated or revolutionary; it is mostly a more-flexible column and row approach like `UIStackView` or `NSStackView`. Unlike `UIStackView` or `NSStackView` however, it is designed exclusively for Swift and can therefore take maximum advantage of Swift syntactic efficiency for a more aesthetic design.
 
