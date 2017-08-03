@@ -20,7 +20,7 @@ Declarative programming is about describing a program as a set of rules and rela
 
 Layout is an inherently declarative task. Layout is a set of rules (which Auto Layout calls "constraints") that apply to the contents of a view, ideally for the entire lifetime of the contents. Constraint programming itself is sometimes considered a subdiscipline of declarative programming.
 
-Unfortunately, despite Auto Layout modelling a declarative system, it doesn't offer a very declarative API. There are a handful of ways to use Auto Layout but none of them can be written as a single expression, most require a number of mutable property changes to configure views. In many cases, multiple constraints must be allocated and applied at separate times.
+Unfortunately, despite Auto Layout modelling constraints (a kind of a declarative system), it doesn't offer a very declarative API. There are a handful of ways to use Auto Layout but none of them can be written as a single expression, most require a number of mutable property changes to configure views. In many cases, multiple constraints must be allocated and applied at separate times.
 
 The end result is unaesthetic code that is inconsistent by default. In fact, since each view requires 4 separate constraints (width, height, x-placement, y-placement), any arbitrary set of Auto Layout constraints is far more likely to be inconsistent than consistent – and an inconsistent system of rules is no system at all.
 
@@ -34,7 +34,7 @@ This layout contains two labels and the gray area is the boundary of the contain
 
 The layout aligns the bottom edges of two horizontally adjacent `UILabel`s, makes both labels the same width and places both within the parent view so that the tallest touches the upper margin of the view, the left and right labels touch the left and right margins, the labels are separated by a margin width and the bottom of the view is left vacant.
 
-A key point to note about this layout is that it doesn't encode the height of either view. If the text changed the labels would adjust their heights, possibly changing which label touches the top margin and possibly changing how much of the view is left vacant at the bottom.
+A key point to note about this layout is that it doesn't encode the height of either label. If the text changed the labels would adjust their heights, possibly changing which label touches the top margin and possibly changing how much of the view is left vacant at the bottom but they would maintain their equal widths and maintain their aligned bottom edge.
 
 ## Manually applied constraints
 
@@ -207,7 +207,7 @@ You'll notice too that there's no need to add subviews or configure other proper
 
 I mentioned that one of the drawbacks to `UIStackView` is that it can be difficult to control the size of contained items – the stack view applies its own sizing logic which is opaque and difficult to override.
 
-For example, imagine instead of this 50/50 split, we wanted a 75/25 split. With CwlLayout, it's simple to use a `sizedView` (one which include explicit size constraints):
+For example, imagine instead of this 50/50 split, we wanted a 75/25 split. With CwlLayout, it's simple to use a `sizedView` (one which includes explicit size constraints):
 
 */
 func example5(view: UIView, left: UILabel, right: UILabel) {
@@ -224,9 +224,11 @@ func example5(view: UIView, left: UILabel, right: UILabel) {
 let view5 = runExample(reversed: false, example: example5)
 /*:
 
-The `interViewSpace` is equivalent to a `.space(8.0)`, which itself is equivalent to `.space(.equalTo(constant: 8.0))`. This 8 screen unit separation is a standard space that Apple suggests for container margins and spacing between adjacent views and CwlLayout includes one by default between the `matchedPair` in the previous example. Note however that `UIViewController` has very different margins and the `safeAreaGuides` in iOS 11 are potentially different again. CwlLayout respects margins by default but there's a hidden `marginEdges` parameter that lets you toggle each margin edge between safe-area, layout margins and no margins.
-
 The `0.75` ratio is a ratio of the parent container – in this case, the inner `.horizontal` layout, which the outer `.horizontal` layout insets by the view's margins, so it already excludes the margins. However, we also want to leave space for the 8 pixel space between the two labels, hence the `-0.75 * 8` constant which is subtracted from the width, leaving a perfect 3:1 ratio between the two labels.
+
+The "8 unit space" is created by `interViewSpace`, equivalent to `.space(8.0)`. CwlLayout included one by default between the `matchedPair` in the previous example but since we're managing the row more manually this time, it's been explicitly included. This 8 unit separation is a standard space that Apple suggests for container margins and spacing between adjacent views.
+
+Note however that `UIViewController` has very different margins and the `safeAreaGuides` in iOS 11 are potentially different again. CwlLayout respects margins by default on the outermost layout container and there's a `marginEdges` parameter (hidden in this example) that lets you toggle each margin edge between safe-area, layout margins and no margins.
 
 It's also possible to specify the `breadth` (size perpendicular to layout direction). If the `breadth` is specified as a ratio, it can be a ratio of the parent container or a ratio of the `length` so aspect ratio preserving sizing is possible.
 
@@ -254,11 +256,17 @@ Don't misunderstand me: you can still create an inconsistent set of constraints 
 
 ## Usage
 
-The CwlLayout.swift file is available in the Sources folder of the Swift Playground for this article. The file has no dependencies so you can just drop it into any of your projects.
+The [CwlLayout.swift file](https://github.com/mattgallagher/CocoaWithLovePlaygrounds/blob/master/CwlLayout.playground/Sources/CwlLayout.swift) is available in the [Sources folder](https://github.com/mattgallagher/CocoaWithLovePlaygrounds/tree/master/CwlLayout.playground/Sources) of the [Swift Playground for this article](https://github.com/mattgallagher/CocoaWithLovePlaygrounds). The file has no dependencies beyond AppKit/UIKit so you can just drop it into any of your projects.
 
-CwlLayout supports deployment targets of macOS 10.11, iOS 9 and later. I don't have full test coverage so there may be some rough edges around.
+CwlLayout supports deployment targets of macOS 10.11, iOS 9 and later.
 
 > **Swift 4 and iOS 11/macOS 10.13**: If you're building with Swift 4, then you *must* use the iOS 11 or macOS 10.13 SDK. If you're building with Swift 3.2 or lower, then you must use the iOS 10 or macOS 10.12 SDK. I don't like tying the Swift version and SDK versions together like this but I'm not sure how else to handle the changes in the SDK overlay.
+
+The file lacks full test coverage so there may be some rough edges around. If you encounter any obvious bugs, let me know.
+
+At the moment, CwlLayout does not support animating. It would be nice to animate from one arrangement to another but that would be a task for the future. There is also no support for text baseline alignment; another feature for the future.
+
+If you look at the code, you'll notice that there's a `DEBUG` setting in there. For many tasks, CwlLayout uses `UILayoutGuide`/`NSLayoutGuide` to define regiongs but at debug time, a `UIView`/`NSView` can be used instead since this shows up better in the view debugging tools in Xcode.
 
 ## Conclusion
 
