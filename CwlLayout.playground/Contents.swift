@@ -71,7 +71,7 @@ func example1(view: UIView, left: UILabel, right: UILabel) {
 let view1 = runExample(reversed: false, example: example1)
 /*:
 
-> **NOTE:** if you're viewing this in the [Swift Playground](https://github.com/mattgallagher/CocoaWithLovePlaygrounds), the last `let view1 =` line will have a gray "Show Result" square in the right margin. Click this square to view the layout. Set the `reversed` parameter to `false` to swap the labels on the text fields.
+> **NOTE:** if you're viewing this in the [Swift Playground](https://github.com/mattgallagher/CocoaWithLovePlaygrounds), the last `let view1 =` line will have a gray "Show Result" square in the right margin. Click this square to view the layout. Set the `reversed` parameter to `true` to swap the labels on the text fields.
 
 The problem here is that I've had to write nine separate constraints, set a handful of properties and other actions including adding subviews and activating constraints. That's a *lot* of meticulous work and omitting any step will not merely change the layout but is likely leave the layout in one of the following four problematic states:
 
