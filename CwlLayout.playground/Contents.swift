@@ -22,7 +22,7 @@ Layout is an inherently declarative task. Layout is a set of rules (which Auto L
 
 Unfortunately, despite Auto Layout modelling a declarative system, it doesn't offer a very declarative API. There are a handful of ways to use Auto Layout but none of them can be written as a single expression, most require a number of mutable property changes to configure views. In many cases, multiple constraints must be allocated and applied at separate times.
 
-The end result is unaesthetic code that is inconsistent by default. Unless you take the positive action of adding constraints, is view in Auto Layout is considered inconsistently placed. In fact, since each view requires 4 separate constraints (width, height, x-placement, y-placement), an aribtrary set of Auto Layout constraints are far more likely to be inconsistent than valid – and inconsistent system of rules is no system at all.
+The end result is unaesthetic code that is inconsistent by default. In fact, since each view requires 4 separate constraints (width, height, x-placement, y-placement), any arbitrary set of Auto Layout constraints is far more likely to be inconsistent than consistent – and an inconsistent system of rules is no system at all.
 
 ## An example layout
 
