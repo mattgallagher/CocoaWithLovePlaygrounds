@@ -183,7 +183,7 @@ It's not because of the `flatMap` function itself but because it is the only sta
 
 We can model this stage like this:
 
-![Figure 1: a diagram of a reducer, its state and messages](/assets/blog/reducer.svg)
+![Figure 1: a diagram of a reducer, its state and messages](reducer_actor.png)
 
 Each of the `a` values in this diagram are the `Instruction` values. The `x` values are the `state` and the `b` values are the `Int?` emitted.
 
