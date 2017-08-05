@@ -115,7 +115,7 @@ public struct Layout {
 /// - matched: a sequence of alternating "same size" and independent entities (you can use `.space(0)` if you don't want independent entities).
 public enum LayoutEntity {
 	case space(LayoutDimension)
-	case sizedView(Layout.View, size: LayoutSize?)
+	case sizedView(Layout.View, LayoutSize?)
 	indirect case layout(Layout, size: LayoutSize?)
 	indirect case matched(LayoutEntity, [(independent: LayoutEntity, same: LayoutEntity)], priority: LayoutDimension.Priority)
 	
@@ -134,7 +134,7 @@ public enum LayoutEntity {
 	}
 	
 	public static func view(_ view: Layout.View) -> LayoutEntity {
-		return .sizedView(view, size: nil)
+		return .sizedView(view, nil)
 	}
 	
 	public static var interViewSpace: LayoutEntity {
