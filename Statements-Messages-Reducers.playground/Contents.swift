@@ -54,6 +54,8 @@ printCode(smirkingFace)
 
 let stuckOutTongueClosedEyes = 0x1f61d
 printCode(stuckOutTongueClosedEyes)
+
+print("End of section 'A series of statements'")
 /*:
 
 This will print each of the following on their own line: 😀 🤣 � 😏 😝
@@ -121,6 +123,8 @@ let instructions = Instruction.array(
 for i in instructions {
 	interpreter.handleInstruction(i)
 }
+
+print("End of section 'Controlling our program through messages'")
 /*:
 
 This code produces the same output as the previous example and uses a very similar `printCode` function internally but it should be clear that the `Interpreter` struct is running a little mini-program defined by the `instructions` array.
@@ -169,6 +173,8 @@ Instruction.array(
 		print("�")
 	}
 }
+
+print("End of section 'Structuring logic through component connections'")
 /*:
 
 Once again, the code will print the same output as previous examples.
@@ -217,14 +223,15 @@ Signal<Instruction>.from(values: [
 	case .print: return state
 	case .increment(let x): state += x; return nil
 	case .set(let x): state = x; return nil	}
-}.subscribeValuesAndKeepAlive { value in
+}.subscribeValuesUntilEnd { value in
 	if let scalar = UnicodeScalar(value) {
 		print(scalar)
 	} else {
 		print("�")
 	}
-	return true
 }
+
+print("End of section 'Where do we go from here?'")
 /*:
 
 The `filterMap` function here is more ideally suited as a reducer since it offers truly private internal state as part of the API – no more captured variables required to establish private state - otherwise it is semantically equivalent to the previous `flatMap` as it maps over the sequences of values in the signal and filters out optionals.

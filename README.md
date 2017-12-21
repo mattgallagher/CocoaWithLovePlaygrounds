@@ -6,11 +6,11 @@ Swift Playground versions of select articles from Cocoa with Love.
 2. [CwlLayout: a Swift wrapper around Auto Layout](#cwllayout-a-declarative-wrapper-around-auto-layout)
 3. [A view construction syntax](#a-view-construction-syntax)
 
+These playgrounds are all tested in Xcode 9.2.
+
 ## Statements, messages, reducers
 
 This article originally appeared on the [Cocoa with Love](https://www.cocoawithlove.com) website: [Statements, messages and reducers](https://www.cocoawithlove.com/blog/statements-messages-reducers.html).
-
-The playground should work in Xcode 8.3.3 and Xcode 9.
 
 Note that the playground may take about 10 seconds to start while it compiles the associated "Sources" for the project.
 
@@ -18,12 +18,8 @@ Note that the playground may take about 10 seconds to start while it compiles th
 
 This article originally appeared on the [Cocoa with Love](https://www.cocoawithlove.com) website: [CwlLayout: a Swift wrapper around Auto Layout](https://www.cocoawithlove.com/blog/cwllayout.html).
 
-The playground should work in Xcode 8.3.3 and Xcode 9.
-
 ## A view construction syntax
 
 This article originally appeared on the [Cocoa with Love](https://www.cocoawithlove.com) website: [A view construction syntax](https://www.cocoawithlove.com/blog/a-view-construction-syntax.html).
-
-The playground should work in Xcode 9.
 
 Note that the playground may take about 10 seconds to start while it compiles the associated "Sources" for the project.
