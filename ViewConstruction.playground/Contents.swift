@@ -28,7 +28,7 @@ class PersonViewController: BaseViewController {
 	enum Approach { case cocoaViews, reactiveViews, cwlViews }
 
 //: **Edit the next line to swift between the different implementations...**
-	let approach = Approach.reactiveViews
+	let approach = Approach.cwlViews
 	
 	override func constructNameField() {
 		switch approach {
@@ -41,7 +41,6 @@ class PersonViewController: BaseViewController {
 //: **CwlViews**
 	func cwlViews() {
 		self.nameField = UITextField(
-			.textFieldBinding(.borderStyle(.constant(.roundedRect))),
 			.borderStyle -- .roundedRect,
 			.enabled -- ViewState.shared.personSignal
 				.map { $0.isEditing },
