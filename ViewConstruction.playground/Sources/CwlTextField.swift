@@ -60,7 +60,7 @@ public struct TextField: DerivedBinder, TextFieldConstructor {
 		case inheritedBinding(inheritedBinding.Binding)
 		
 		case text(DynamicValue<String>)
-		case borderStyle(DynamicValue<UITextBorderStyle>)
+		case borderStyle(DynamicValue<UITextField.BorderStyle>)
 		case didChange(SignalInput<String>)
 	}
 
@@ -75,7 +75,7 @@ public struct TextField: DerivedBinder, TextFieldConstructor {
 			switch binding {
 			case .text(let x): return x.apply(instance, storage) { i, s, v in i.text = v }
 			case .borderStyle(let x): return x.apply(instance, storage) { i, s, v in i.borderStyle = v }
-			case .didChange(let x): return signalFromNotifications(name: NSNotification.Name.UITextFieldTextDidChange, object: instance).filterMap { n in (n.object as? UITextField)?.text }.cancellableBind(to: x)
+			case .didChange(let x): return signalFromNotifications(name: UITextField.textDidChangeNotification, object: instance).filterMap { n in (n.object as? UITextField)?.text }.cancellableBind(to: x)
 			case .inheritedBinding(let s): return linkedPreparer.applyBinding(s, instance: instance, storage: storage)
 			}
 		}
@@ -89,7 +89,7 @@ extension BindingName where Binding: TextFieldBinding {
 	// Replace: case ([^\(]+)\((.+)\)$
 	// With:    public static var $1: BindingName<$2, Binding> { return BindingName<$2, Binding>({ v in .textFieldBinding(TextField.Binding.$1(v)) }) }
 	public static var text: BindingName<DynamicValue<String>, Binding> { return BindingName<DynamicValue<String>, Binding>({ v in .textFieldBinding(TextField.Binding.text(v)) }) }
-	public static var borderStyle: BindingName<DynamicValue<UITextBorderStyle>, Binding> { return BindingName<DynamicValue<UITextBorderStyle>, Binding>({ v in .textFieldBinding(TextField.Binding.borderStyle(v)) }) }
+	public static var borderStyle: BindingName<DynamicValue<UITextField.BorderStyle>, Binding> { return BindingName<DynamicValue<UITextField.BorderStyle>, Binding>({ v in .textFieldBinding(TextField.Binding.borderStyle(v)) }) }
 	public static var didChange: BindingName<SignalInput<String>, Binding> { return BindingName<SignalInput<String>, Binding>({ v in .textFieldBinding(TextField.Binding.didChange(v)) }) }
 }
 

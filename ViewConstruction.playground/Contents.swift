@@ -76,7 +76,7 @@ class PersonViewController: BaseViewController {
 			.subscribeValues { field.text = $0 }
 
 		// Actions
-		signalFromNotifications(name: .UITextFieldTextDidChange, object: field)
+		signalFromNotifications(name: UITextField.textDidChangeNotification, object: field)
 			.filterMap { ($0.object as? UITextField)?.text }
 			.triggerCombine(ViewState.shared.personSignal)
 			.map { .setName($0.trigger, $0.sample.id) }
@@ -115,7 +115,7 @@ class PersonViewController: BaseViewController {
 		}
 
 		// Actions
-		let o = NotificationCenter.default.addObserver(forName: .UITextFieldTextDidChange, object: field, queue: nil) { [weak self] n in
+		let o = NotificationCenter.default.addObserver(forName: UITextField.textDidChangeNotification, object: field, queue: nil) { [weak self] n in
 			guard let s = self, let text = (n.object as? UITextField)?.text, let pvs = s.personViewState else { return }
 			Document.shared.setName(text, forPersonId: pvs.id)
 		}

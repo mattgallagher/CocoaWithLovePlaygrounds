@@ -42,7 +42,7 @@ public struct Layout {
 		public typealias View = NSView
 		public typealias Guide = NSLayoutGuide
 	#else
-		public typealias Axis = UILayoutConstraintAxis
+		public typealias Axis = NSLayoutConstraint.Axis
 		public typealias View = UIView
 		public typealias Guide = UILayoutGuide
 	#endif
@@ -234,7 +234,7 @@ public struct LayoutDimension: ExpressibleByFloatLiteral, ExpressibleByIntegerLi
 			public static let PriorityDefaultHigh = NSLayoutPriorityDefaultHigh * 1.125
 		#endif
 	#else
-		public typealias Relation = NSLayoutRelation
+		public typealias Relation = NSLayoutConstraint.Relation
 		public typealias Priority = UILayoutPriority
 		#if swift(>=4)
 			public static let PriorityRequired = UILayoutPriority.required
