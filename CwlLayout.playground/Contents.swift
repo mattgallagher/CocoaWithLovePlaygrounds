@@ -62,10 +62,10 @@ func example1(view: UIView, left: UILabel, right: UILabel) {
 	NSLayoutConstraint.activate(constraints)
 	
 	let leftTop = left.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor)
-	leftTop.priority = LayoutDimension.PriorityDefaultLow
+	leftTop.priority = .userLow
 	leftTop.isActive = true
 	let rightTop = right.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor)
-	rightTop.priority = LayoutDimension.PriorityDefaultLow
+	rightTop.priority = .userLow
 	rightTop.isActive = true
 }
 let view1 = runExample(reversed: false, example: example1)
@@ -214,8 +214,8 @@ func example5(view: UIView, left: UILabel, right: UILabel) {
 	view.applyLayout(
 		.horizontal(align: .leading,
 			.horizontal(align: .trailing,
-				.sizedView(left, .lengthEqualTo(ratio: 0.75, constant: -0.75 * 8)),
-				.interViewSpace,
+				.view(length: .equalTo(ratio: 0.75, constant: -0.75 * 8), left),
+				.space(),
 				.view(right)
 			)
 		)
@@ -226,7 +226,7 @@ let view5 = runExample(reversed: false, example: example5)
 
 The `0.75` ratio is a ratio of the parent container – i.e. the inner `.horizontal` layout, which the outer `.horizontal` layout has already inset by the view's margins. However, we also want to leave space for the 8 pixel space between the two labels, hence the `-0.75 * 8` constant which is subtracted from the width, leaving a perfect 3:1 ratio between the two labels.
 
-The "8 unit space" is created by `interViewSpace`, equivalent to `.space(8.0)`. CwlLayout included an `interViewSpace` automatically between the `matchedPair` in the previous example but since we're managing the row more manually this time, it's been explicitly included. This 8 unit separation is a standard space that Apple suggests for container margins and spacing between adjacent views.
+The "8 unit space" is created by `.space()`, equivalent to `.space(8.0)`. CwlLayout included a `.space()` automatically between the `matchedPair` in the previous example but since we're managing the row more manually this time, it's been explicitly included. This 8 unit separation is a standard space that Apple suggests for container margins and spacing between adjacent views.
 
 Note however that `UIViewController` has very different margins and the `safeAreaGuides` in iOS 11 are different again. CwlLayout respects margins by default on the outermost layout container and there's a `marginEdges` parameter (hidden in this example) that lets you toggle each margin edge between safe-area, layout margins and no margins.
 
@@ -258,13 +258,11 @@ let view6 = runExample(reversed: false, example: example6)
 
 The [CwlLayout.swift file](https://github.com/mattgallagher/CocoaWithLovePlaygrounds/blob/master/CwlLayout.playground/Sources/CwlLayout.swift) is available in the [Sources folder](https://github.com/mattgallagher/CocoaWithLovePlaygrounds/tree/master/CwlLayout.playground/Sources) of the [Swift Playground for this article](https://github.com/mattgallagher/CocoaWithLovePlaygrounds). The file has no dependencies beyond AppKit/UIKit so you can just drop it into any of your projects.
 
-CwlLayout supports deployment targets of macOS 10.11, iOS 9 and later.
-
-> **Swift 4 and iOS 11/macOS 10.13**: If you're building with Swift 4, then you *must* use the iOS 11 or macOS 10.13 SDK. If you're building with Swift 3.2 or lower, then you must use the iOS 10 or macOS 10.12 SDK. I don't like tying the Swift version and SDK versions together like this but I'm not sure how else to handle the changes in the SDK overlay.
+CwlLayout requires Swift 4.2 and a deployment target of macOS 10.13 or iOS 11 or higher. Older versions supporting iOS 10, macOS 10.12 and Swift 3.2 can be found in the git history.
 
 The file lacks full test coverage so there may be some rough edges. If you encounter any obvious bugs, let me know.
 
-At the moment, CwlLayout does not support animation. It would be nice to animate from one arrangement to another but that's a task for the future. Support for text baseline alignment is also not yet implemented.
+CwLLayout support animation when moving from one layout to another. Maybe I'll document that in future.
 
 If you look at the code, you'll notice that there's a `DEBUG` setting in there. For many tasks, CwlLayout uses `UILayoutGuide`/`NSLayoutGuide` to define regions but a compile condition will switch these guides to `UIView`/`NSView` instead since views show up better in the debugging tools in Xcode.
 

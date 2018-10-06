@@ -160,7 +160,7 @@ Instruction.array(
 	.set(0x999999), .print,
 	.set(0x1f60f), .print,
 	.increment(0xe), .print
-).flatMap { (i: Instruction) -> Int? in
+).compactMap { (i: Instruction) -> Int? in
 	switch i {
 	case .print: return state
 	case .increment(let x): state += x; return nil
@@ -183,23 +183,26 @@ We now have a three stage pipeline that directly reflects the 3 points above: a 
 
 ## Reducers
 
-Let's look in particular at the `flatMap` stage in the middle of our pipeline. Why is it the most important?
+Let's look in particular at the `compactMap` stage in the middle of our pipeline. Why is it the most important?
 
-It's not because of the `flatMap` function itself but because it is the only stage where I used a capturing closure. The `state` variable is captured and referenced exclusively by this stage, making the `state` value effectively a private variable of the `flatMap` closure. The state is only ever indirectly accessed from outside the `flatMap` stage – it is set by providing an input `Instruction` and it is accessed via `Int` values that the `flatMap` stage chooses to emit.
+It's not because of the `compactMap` function itself but because it is the only stage where I used a capturing closure. The `state` variable is captured and referenced exclusively by this stage, making the `state` value effectively a private variable of the `compactMap` closure.
+
+While the purpose of the `Instruction` array is to manipulate the `state` variable, it does not directly read or write to it. Instead, the `state` is indirectly accessed from outside the `compactMap` stage – it is set by providing input instructions and the output is passively received through `Int` values that the `compactMap` stage chooses to emit.
+
+The concept here is the third tier of computational unit that I want to discuss: a **reducer**. Algebraically, a reducer gets its name because it "reduces" the incoming stream of message values into a single internal state value. A reducer is an entity with identity (a reference type in Swift) and internal state that is accessed solely by sending incoming messages and passively receiving outgoing updates (usually copies of the state following the update).
 
 We can model this stage like this:
 
-![Figure 1: a diagram of a reducer, its state and messages](reducer_actor.png)
+![Figure 1: a diagram of a reducer, its state and messages](reducer.png)
 
-Each of the `a` values in this diagram are the `Instruction` values. The `x` values are the `state` and the `b` values are the `Int?` emitted.
+The most important trait of reducers for managing program complexity is that reducers are totally isolated. Since you cannot imperatively "get" their content, external components are prevented from making assumptions about the internal operation. These boxes are how we can lay out higher level logic.
 
-This is called a **reducer** and it is the third tier of computational unit that I want to discuss. A reducer is an entity with identity (a reference type in Swift) and internal state that is accessed purely by incoming and outgoing messages.
+Another way of explaining this is:
 
-When I say that reducers are the third tier of computation unit that I want to discuss, I'm excluding consideration of the contents of the reducer (which are typical Swift statements effecting the encapsulated state) and instead considering the reducer as a single black box unit defined by its connections to other units and suggesting that these boxes are how we can lay out higher level logic.
+	1. statements perform logic within a single execution context
+	2. reducers form logic by joining independent execution contexts
 
-Another way of explaining this is while statements perform logic *within* an execution context, reducers form logic by spanning between execution contexts.
-
-I used a capturing closure to ad hoc a reducer from a `flatMap` function and an `Int` variable but most reducers are `class` instances that maintain their state a little more tightly and assist with integration into a larger graph.
+I used a capturing closure to ad hoc a reducer from a `compactMap` function and an `Int` variable but most reducers are `class` instances that maintain their state a little more tightly and assist with integration into a larger graph.
 
 > The term "reducer" to describe this type of construct comes via [reduction semantics](https://en.wikipedia.org/wiki/Operational_semantics#Reduction_semantics) in programming language semantics. In a weird terminology twist, "reducers" are also called "accumulators", despite those words being near opposites. It's a matter of perspective: a "reducer" reduces the incoming stream of messages down to a single state value; while an "accumulator" accumulates new information in its state over time by incorporating each incoming message as it arrives.
 
@@ -212,13 +215,13 @@ We could migrate our previous code, which operates on a Swift `Array` of values 
 Here's how it looks:
 
 */
-Signal<Instruction>.from(values: [
+Signal<Instruction>.just(
 	.set(0x1f600), .print,
 	.increment(0x323), .print,
 	.set(0x999999), .print,
 	.set(0x1f60f), .print,
 	.increment(0xe), .print
-]).filterMap(initialState: 0) { (state: inout Int, i: Instruction) -> Int? in
+).compactMap(initialState: 0) { (state: inout Int, i: Instruction) -> Int? in
 	switch i {
 	case .print: return state
 	case .increment(let x): state += x; return nil
@@ -234,7 +237,7 @@ Signal<Instruction>.from(values: [
 print("End of section 'Where do we go from here?'")
 /*:
 
-The `filterMap` function here is more ideally suited as a reducer since it offers truly private internal state as part of the API – no more captured variables required to establish private state - otherwise it is semantically equivalent to the previous `flatMap` as it maps over the sequences of values in the signal and filters out optionals.
+The `compactMap` function here is more ideally suited as a reducer since it offers truly private internal state as part of the API – no more captured variables required to establish private state - otherwise it is semantically equivalent to the previous `compactMap` as it maps over the sequences of values in the signal and filters out optionals.
 
 This simple change between abstractions is possible because the contents of the reducer are dependent on the messages, not the reducer machinery itself.
 
@@ -262,7 +265,7 @@ It's a situation where *limiting* the functionality of an interface will greatly
 
 ### Looking forward...
 
-In the example in the [Structuring logic through component connections](#structuring-logic-through-component-connections) section, I used the controversial definition of `flatMap` (the one that isn't a monad). In my next article, I'm going to talk about why monads are considered a fundamental unit of computation to many functional programmers yet a strict implementation in imperative programming is sometimes less useful than transforms which aren't quite monads.
+In the example in the [Structuring logic through component connections](#structuring-logic-through-component-connections) section, I used the function `compactMap`, which was renamed from `flatMap` in Swift 4.1. In my next article, I'm going to talk about why this rename occured, why monadic transforms like `flatMap` are considered a fundamental unit of computation to many functional programmers yet aren't really as important in imperative languages, like Swift.
 
 ## Code license
 

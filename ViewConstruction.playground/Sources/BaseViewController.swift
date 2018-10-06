@@ -60,19 +60,19 @@ open class BaseViewController:UIViewController {
 			marginEdges: .allLayout,
 			.space(40),
 			.view(nameFieldLabel),
-			.interViewSpace,
+			.space(),
 			.view(field),
-			.space(40),
+			.space(20),
 			.horizontal(align: .center,
 				.view(toggleLabel),
-				.interViewSpace,
-				.sizedView(editToggle, .lengthEqualTo(ratio: 0.25))
+				.space(),
+				.view(length: .equalTo(ratio: 0.25), editToggle)
 			),
 			.space(20),
 			.horizontal(align: .center,
 				.view(switchLabel),
-				.interViewSpace,
-				.sizedView(personSwitch, .lengthEqualTo(ratio: 0.25))
+				.space(),
+				.view(length: .equalTo(ratio: 0.25), personSwitch)
 			),
 			.space(20),
 			.view(resetButton),

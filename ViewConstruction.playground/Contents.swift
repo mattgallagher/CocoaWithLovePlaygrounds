@@ -40,20 +40,19 @@ class PersonViewController: BaseViewController {
 	
 //: **CwlViews**
 	func cwlViews() {
-		self.nameField = UITextField(
+		self.nameField = TextField(
 			.borderStyle -- .roundedRect,
-			.enabled -- ViewState.shared.personSignal
+			.isEnabled <-- ViewState.shared.personSignal
 				.map { $0.isEditing },
-			.backgroundColor -- ViewState.shared.personSignal
+			.backgroundColor <-- ViewState.shared.personSignal
 				.map { $0.isEditing ? .white : .lightGray },
-			.text -- ViewState.shared.personSignal
+			.text <-- ViewState.shared.personSignal
 				.flatMapLatest { Document.shared.signalForPerson(withId: $0.id) }
 				.map { $0.name },
-			.didChange -- Input()
-				.triggerCombine(ViewState.shared.personSignal)
-				.map { .setName($0.trigger, $0.sample.id) }
+			.textChanged --> Input()
+				.withLatestFrom(ViewState.shared.personSignal) { .setName($0, $1.id) }
 				.bind(to: Document.shared)
-		)
+		).instance()
 	}
 	
 //: **Reactive Views**
@@ -76,10 +75,9 @@ class PersonViewController: BaseViewController {
 			.subscribeValues { field.text = $0 }
 
 		// Actions
-		signalFromNotifications(name: .UITextFieldTextDidChange, object: field)
-			.filterMap { ($0.object as? UITextField)?.text }
-			.triggerCombine(ViewState.shared.personSignal)
-			.map { .setName($0.trigger, $0.sample.id) }
+		Signal.notifications(name: UITextField.textDidChangeNotification, object: field)
+			.compactMap { ($0.object as? UITextField)?.text }
+			.withLatestFrom(ViewState.shared.personSignal) { .setName($0, $1.id) }
 			.bind(to: Document.shared)
 	}
 	
@@ -115,7 +113,7 @@ class PersonViewController: BaseViewController {
 		}
 
 		// Actions
-		let o = NotificationCenter.default.addObserver(forName: .UITextFieldTextDidChange, object: field, queue: nil) { [weak self] n in
+		let o = NotificationCenter.default.addObserver(forName: UITextField.textDidChangeNotification, object: field, queue: nil) { [weak self] n in
 			guard let s = self, let text = (n.object as? UITextField)?.text, let pvs = s.personViewState else { return }
 			Document.shared.setName(text, forPersonId: pvs.id)
 		}
